@@ -14,16 +14,19 @@ class CompanyDetails extends Component
 
     public function mount(Company $company)
     {
-        $this->company = $company;
+       $this->company = $company;
 
-        // Fetch real-time stock details using the Alpha Vantage API (replace YOUR_API_KEY)
-        $response = Http::get("https://www.alphavantage.co/query", [
-            'function' => 'GLOBAL_QUOTE',
-            'symbol' => $company->stock_symbol,
-            'apikey' => 'H51G5NFZB6WCKW4F',
-        ]);
+		$response = Http::get("https://www.alphavantage.co/query", [
+			'function' => 'TIME_SERIES_INTRADAY',
+			'symbol' => $company->stock_symbol,
+			'interval' => "5min",
+			'apikey' => 'H51G5NFZB6WCKW4F',
+		]);
 
-        $this->stockDetails = $response->json()['Global Quote'] ?? null;
+		$data = $response->json();
+		$this->stockDetails = $data['Time Series (5min)'] ?? null;
+
+
     }
 
     public function render()
